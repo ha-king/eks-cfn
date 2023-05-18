@@ -100,7 +100,7 @@ Resources:
       InstanceTypes:
         - t3.medium
       NodegroupName: !Sub "${AWS::StackName}-nodegroup"
-      NodeRole: !Ref EksNodeWorkerRole
+      NodeRole: !GetAtt ["EksNodeWorkerRole", "Arn"]
       RemoteAccess:
         Ec2SshKey: !If [HasKeyName, !Ref KeyName, !Ref 'AWS::NoValue']
       ScalingConfig:
