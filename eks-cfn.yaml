@@ -6,10 +6,14 @@ AWSTemplateFormatVersion: "2010-09-09"
 Description: Amazon EKS - Cluster
 
 Parameters:
+  ParentVPCStack:
+    Description: 'Stack name of parent VPC stack based on vpc/vpc-*azs.yaml template.'
+    Type: String
+    Default: 'vpc-2az'
   ClusterName:
     Type: String
     Description: Name of the EKS cluster
-    Default: 'EKS-DEV2'
+    Default: 'EKS-DEV3'
   EksVersion:
     Type: String
     Description: Name of the EKS cluster
@@ -18,6 +22,10 @@ Parameters:
     Type: String
     Description: Name of the EC2 ssh keypair name for node workders
     Default: 'eks-workers'
+  InstanceType:
+    Type: String
+    Description: Type of the EC2 for node workders
+    Default: 't3.medium'
 
 Conditions:
   HasKeyName: !Not [!Equals [!Ref KeyName, '']]
@@ -84,10 +92,10 @@ Resources:
       RoleArn: !GetAtt ["EksClusterRole", "Arn"]
       ResourcesVpcConfig:
         SecurityGroupIds:
-          - sg-03bbd61ed49f6ff22
+        - {'Fn::ImportValue': !Sub '${ParentVPCStack}-VPC-DefaultSecurityGroup'}
         SubnetIds:
-        - subnet-0d6e6bac51c3ee655
-        - subnet-058e54b2ecc1376fc
+        - {'Fn::ImportValue': !Sub '${ParentVPCStack}-SubnetAPrivate'}
+        - {'Fn::ImportValue': !Sub '${ParentVPCStack}-SubnetBPrivate'}
 
   EKSNodegroup:
     Type: 'AWS::EKS::Nodegroup'
@@ -98,7 +106,7 @@ Resources:
       DiskSize: 20
       ForceUpdateEnabled: true
       InstanceTypes:
-        - t3.medium
+        - Ref InstanceType
       NodegroupName: !Sub "${AWS::StackName}-nodegroup"
       NodeRole: !GetAtt ["EksNodeWorkerRole", "Arn"]
       RemoteAccess:
@@ -108,7 +116,5 @@ Resources:
         DesiredSize: 1
         MaxSize: 4
       Subnets:
-        - subnet-0d6e6bac51c3ee655
-        - subnet-058e54b2ecc1376fc
-        - subnet-0f1b586c0cca62fa7
-        - subnet-0a4ffdb5928cdc0e5
+      - {'Fn::ImportValue': !Sub '${ParentVPCStack}-SubnetAPrivate'}
+      - {'Fn::ImportValue': !Sub '${ParentVPCStack}-SubnetBPrivate'}
