@@ -13,7 +13,7 @@ Parameters:
   ClusterName:
     Type: String
     Description: Name of the EKS cluster
-    Default: 'EKS-DEV3'
+    Default: 'EKS-DEV'
   EksVersion:
     Type: String
     Description: Name of the EKS cluster
@@ -94,8 +94,8 @@ Resources:
         SecurityGroupIds:
         - {'Fn::ImportValue': !Sub '${ParentVPCStack}-VPC-DefaultSecurityGroup'}
         SubnetIds:
-        - {'Fn::ImportValue': !Sub '${ParentVPCStack}-SubnetAPrivate'}
-        - {'Fn::ImportValue': !Sub '${ParentVPCStack}-SubnetBPrivate'}
+        - {'Fn::ImportValue': !Sub '${ParentVPCStack}-SubnetAPublic'}
+        - {'Fn::ImportValue': !Sub '${ParentVPCStack}-SubnetBPublic'}
 
   EKSNodegroup:
     Type: 'AWS::EKS::Nodegroup'
@@ -106,7 +106,7 @@ Resources:
       DiskSize: 20
       ForceUpdateEnabled: true
       InstanceTypes:
-        - Ref InstanceType
+        - !Ref InstanceType
       NodegroupName: !Sub "${AWS::StackName}-nodegroup"
       NodeRole: !GetAtt ["EksNodeWorkerRole", "Arn"]
       RemoteAccess:
@@ -116,5 +116,5 @@ Resources:
         DesiredSize: 1
         MaxSize: 4
       Subnets:
-      - {'Fn::ImportValue': !Sub '${ParentVPCStack}-SubnetAPrivate'}
-      - {'Fn::ImportValue': !Sub '${ParentVPCStack}-SubnetBPrivate'}
+      - {'Fn::ImportValue': !Sub '${ParentVPCStack}-SubnetAPublic'}
+      - {'Fn::ImportValue': !Sub '${ParentVPCStack}-SubnetBPublic'}
