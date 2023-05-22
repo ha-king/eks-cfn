@@ -11,7 +11,8 @@
 
 #### Setup Steps (CFN)
 1. Open Cloud9 environment named "eks-management-env"
-2. In Cloud9, open a terminal session Clone the github repo for this project `git clone https://github.com/ha-king/eks-cfn.git`
+2. In Cloud9, open Preferences -> AWS Settings. Disable the "AWS Manage Temporary Credentials" toggle
+2. In Cloud9, open a terminal session Clone the github repo for this project: ```git clone https://github.com/ha-king/eks-cfn.git```
 3. `cd eks-cfn/`
 4. `/bin/sh cfn/deploy.sh EKS-DEV us-east-1`
 5. Visit CloudFormation service to view the stack status, until status value is CREATE_COMPLETE
