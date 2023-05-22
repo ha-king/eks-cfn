@@ -1,6 +1,9 @@
 # AWS Cloud9 - EKS Cluster Management 
 
 ## Setup AWS Cloud9 to Manage EKS
+
+Note: `VPC subnet selected for Cloud9 must be publicly available`
+
 1. Login AWS Console
 2. Create new Cloud9 environment named "eks-management-env"
 3. Allow Cloud9 environment setup to complete
