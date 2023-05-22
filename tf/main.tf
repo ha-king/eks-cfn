@@ -7,6 +7,6 @@ resource "aws_cloudformation_stack" "eks-cluster" {
     KeyName = "eks-workers"
     InstanceType = "t3.medium"
   }
-  template_body = "${file("../eks-cfn.yaml")}"
+  template_body = "${file("../cfn/eks-cfn.yaml")}"
   capabilities = ["CAPABILITY_IAM"]
 }
