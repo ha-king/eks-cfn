@@ -27,9 +27,9 @@ Note: `VPC subnet selected for Cloud9 must be publicly available`
 1. Open Cloud9 environment named "eks-management-env"
 2. In Cloud9, open Preferences -> AWS Settings. Disable the "AWS Manage Temporary Credentials" toggle
 2. In Cloud9, open a terminal session Clone the github repo for this project: ```git clone https://github.com/ha-king/eks-cfn.git```
-3. `cd eks-cfn/`
-4. `/bin/sh cfn/deploy.sh EKS-DEV us-east-1`
-5. Visit CloudFormation service to view the stack status, until status value is CREATE_COMPLETE
+3. `cd eks-cfn/terraform`
+4. `terraform init`
+5. `terraform apply --auto-approve`
 6. `/bin/sh cloud9/install_kubectl.sh`
 7. `/bin/sh update-kubeconfig.sh EKS-DEV us-east-1`
 8.  Run the `kubectl get all -A` command to view all Kubernetes resources
