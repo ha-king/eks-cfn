@@ -40,7 +40,7 @@ git clone https://github.com/ha-king/eks-cfn.git
 3. `cd eks-cfn/tf`
 4. `/bin/sh deploy.sh`
 6. `/bin/sh cloud9/install_kubectl.sh`
-7. `/bin/sh update-kubeconfig.sh EKS-DEV us-east-1`
+7. `/bin/sh update-kubeconfig.sh EKS-DEV-TF us-east-1`
 8.  Run the `kubectl get all -A` command to view all Kubernetes resources
 
 #### Sharing Cloud9 Environment
