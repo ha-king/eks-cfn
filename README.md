@@ -2,6 +2,9 @@
 
 ## Setup AWS Cloud9 to Manage EKS
 
+### Prequiste:
+1. Deploy VPC via CloudFormation template located in this repo: `cfn/vpc-2az.yaml`
+
 Note: `VPC subnet selected for Cloud9 must be publicly available`
 
 1. Login AWS Console
