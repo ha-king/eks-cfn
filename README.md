@@ -34,6 +34,15 @@ Note: `VPC subnet selected for Cloud9 must be publicly available`
 7. `/bin/sh update-kubeconfig.sh EKS-DEV us-east-1`
 8.  Run the `kubectl get all -A` command to view all Kubernetes resources
 
+#### Sharing Cloud9 Environment
+1. To invite an IAM user, enter arn:aws:iam::123456789012:user/MyUser. Replace 123456789012 with your AWS account ID and replace MyUser with the name of the user.
+2. To invite a user with an assumed role or a federated user with an assumed role, enter arn:aws:sts::123456789012:assumed-role/MyAssumedRole/MyAssumedRoleSession.
+3. To invite the AWS account root user, enter arn:aws:iam::123456789012:root. Replace 123456789012 with your AWS account ID.
+##### Example:
+```
+aws cloud9 create-environment-membership --environment-id 1234567890987654321 --user-arn arn:aws:iam::123456789098:root --permissions read-write
+```
+
 #### Credits
 
 Author: Tre King
