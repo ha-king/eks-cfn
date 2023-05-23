@@ -4,6 +4,7 @@
 
 ### Prequiste:
 1. Deploy VPC via CloudFormation template located in this repo: `cfn/vpc-2az.yaml`
+2. CloudFormation stack name must be `vpc-2az`
 
 Note: `VPC subnet selected for Cloud9 must be publicly available`
 
@@ -36,9 +37,8 @@ git clone https://github.com/ha-king/eks-cfn.git
 ```
 git clone https://github.com/ha-king/eks-cfn.git
 ```
-3. `cd eks-cfn/terraform`
-4. `terraform init`
-5. `terraform apply --auto-approve`
+3. `cd eks-cfn/tf`
+4. `/bin/sh deploy.sh`
 6. `/bin/sh cloud9/install_kubectl.sh`
 7. `/bin/sh update-kubeconfig.sh EKS-DEV us-east-1`
 8.  Run the `kubectl get all -A` command to view all Kubernetes resources
