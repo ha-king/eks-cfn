@@ -27,8 +27,13 @@ git clone https://github.com/ha-king/eks-cfn.git
 4. `/bin/sh cfn/deploy.sh EKS-DEV us-east-1`
 5. Visit CloudFormation service to view the stack status, until status value is CREATE_COMPLETE
 6. `/bin/sh cloud9/install_kubectl.sh`
-7. `/bin/sh update-kubeconfig.sh EKS-DEV us-east-1`
+7. `/bin/sh cloud9/update-kubeconfig.sh EKS-DEV us-east-1`
 8.  Run the `kubectl get all -A` command to view all Kubernetes resources
+
+Clean up:
+```
+aws cloudformation delete-stack --stack-name EKS-DEV 
+```
 
 #### Setup Steps (Terraform)
 1. Open Cloud9 environment named "eks-management-env"
@@ -39,9 +44,16 @@ git clone https://github.com/ha-king/eks-cfn.git
 ```
 3. `cd eks-cfn/tf`
 4. `/bin/sh deploy.sh`
+5. `cd ..`
 6. `/bin/sh cloud9/install_kubectl.sh`
-7. `/bin/sh update-kubeconfig.sh EKS-DEV-TF us-east-1`
+7. `/bin/sh cloud9/update-kubeconfig.sh EKS-DEV-TF us-east-1`
 8.  Run the `kubectl get all -A` command to view all Kubernetes resources
+
+Clean up:
+```
+cd tf
+terraform destroy --auto-approve
+```
 
 #### Sharing Cloud9 Environment
 1. To invite an IAM user, enter arn:aws:iam::123456789012:user/MyUser. Replace 123456789012 with your AWS account ID and replace MyUser with the name of the user.
