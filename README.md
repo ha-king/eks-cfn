@@ -23,11 +23,12 @@ Note: `VPC subnet selected for Cloud9 must be publicly available`
 ```
 git clone https://github.com/ha-king/eks-cfn.git
 ```
-3. `cd eks-cfn/`
-4. `/bin/sh cfn/deploy.sh EKS-DEV us-east-1`
+3. `cd eks-cfn/cfn`
+4. `/bin/sh deploy.sh EKS-DEV us-east-1`
 5. Visit CloudFormation service to view the stack status, until status value is CREATE_COMPLETE
-6. `/bin/sh cloud9/install_kubectl.sh`
-7. `/bin/sh cloud9/update-kubeconfig.sh EKS-DEV us-east-1`
+6. `cd ../cloud9`
+6. `/bin/sh install_kubectl.sh`
+7. `/bin/sh update-kubeconfig.sh EKS-DEV us-east-1`
 8.  Run the `kubectl get all -A` command to view all Kubernetes resources
 
 Clean up:
@@ -44,9 +45,9 @@ git clone https://github.com/ha-king/eks-cfn.git
 ```
 3. `cd eks-cfn/tf`
 4. `/bin/sh deploy.sh`
-5. `cd ..`
-6. `/bin/sh cloud9/install_kubectl.sh`
-7. `/bin/sh cloud9/update-kubeconfig.sh EKS-DEV-TF us-east-1`
+5. `cd ../cloud9`
+6. `/bin/sh install_kubectl.sh`
+7. `/bin/sh update-kubeconfig.sh EKS-DEV-TF us-east-1`
 8.  Run the `kubectl get all -A` command to view all Kubernetes resources
 
 Clean up:
