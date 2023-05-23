@@ -15,7 +15,10 @@ Note: `VPC subnet selected for Cloud9 must be publicly available`
 #### Setup Steps (CFN)
 1. Open Cloud9 environment named "eks-management-env"
 2. In Cloud9, open Preferences -> AWS Settings. Disable the "AWS Manage Temporary Credentials" toggle
-2. In Cloud9, open a terminal session Clone the github repo for this project: ```git clone https://github.com/ha-king/eks-cfn.git```
+2. In Cloud9, open a terminal session Clone the github repo for this project:
+```
+git clone https://github.com/ha-king/eks-cfn.git
+```
 3. `cd eks-cfn/`
 4. `/bin/sh cfn/deploy.sh EKS-DEV us-east-1`
 5. Visit CloudFormation service to view the stack status, until status value is CREATE_COMPLETE
@@ -26,7 +29,10 @@ Note: `VPC subnet selected for Cloud9 must be publicly available`
 #### Setup Steps (Terraform)
 1. Open Cloud9 environment named "eks-management-env"
 2. In Cloud9, open Preferences -> AWS Settings. Disable the "AWS Manage Temporary Credentials" toggle
-2. In Cloud9, open a terminal session Clone the github repo for this project: ```git clone https://github.com/ha-king/eks-cfn.git```
+2. In Cloud9, open a terminal session Clone the github repo for this project:
+```
+git clone https://github.com/ha-king/eks-cfn.git
+```
 3. `cd eks-cfn/terraform`
 4. `terraform init`
 5. `terraform apply --auto-approve`
@@ -42,6 +48,12 @@ Note: `VPC subnet selected for Cloud9 must be publicly available`
 ```
 aws cloud9 create-environment-membership --environment-id 1234567890987654321 --user-arn arn:aws:iam::123456789098:root --permissions read-write
 ```
+
+#### References:
+1. https://docs.aws.amazon.com/eks/latest/userguide/service_IAM_role.html#create-service-role
+1. https://docs.aws.amazon.com/prescriptive-guidance/latest/patterns/deploy-an-amazon-eks[…]-cluster-from-aws-cloud9-using-an-ec2-instance-profile.html
+1. https://docs.aws.amazon.com/eks/latest/userguide/install-kubectl.html
+1. https://docs.aws.amazon.com/cloud9/latest/user-guide/share-environment.html#share-environment-admin-user
 
 #### Credits
 
