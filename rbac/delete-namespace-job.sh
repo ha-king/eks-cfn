@@ -1,8 +1,7 @@
 #!/bin/bash
 
-JOBNAME=$2
-NAMESPACE=$1
-OUTPUT=$3
+JOBNAME=$1
+NAMESPACE=$2
 
 kubectl delete job $JOBNAME -n $NAMESPACE
 kubectl get job -n $NAMESPACE

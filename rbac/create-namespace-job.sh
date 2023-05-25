@@ -1,7 +1,7 @@
 #!/bin/bash
 
-JOBNAME=$2
-NAMESPACE=$1
+JOBNAME=$1
+NAMESPACE=$2
 OUTPUT=$3
 
 kubectl create job $JOBNAME -n $NAMESPACE --image=busybox -- echo "$OUTPUT"
