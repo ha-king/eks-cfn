@@ -16,7 +16,7 @@ Note: `VPC subnet selected for Cloud9 must be publicly available`
 1. Use AWS Console and navigate to IAM -> Role -> AWSCloud9SSMAccessRole
 2. Update existing role AWSCloud9SSMAccessRole by adding IAM permission policy AdministratorAccess
 
-#### Setup Steps (CFN)
+#### Setup - (CloudFormation)
 1. Open Cloud9 environment named "eks-management-env"
 2. In Cloud9, open Preferences -> AWS Settings. Disable the "AWS Manage Temporary Credentials" toggle
 2. In Cloud9, open a terminal session Clone the github repo for this project:
@@ -36,7 +36,7 @@ Clean up:
 aws cloudformation delete-stack --stack-name EKS-DEV 
 ```
 
-#### Setup Steps (Terraform)
+#### Setup - (Terraform)
 1. Open Cloud9 environment named "eks-management-env"
 2. In Cloud9, open Preferences -> AWS Settings. Disable the "AWS Manage Temporary Credentials" toggle
 2. In Cloud9, open a terminal session Clone the github repo for this project:
@@ -65,7 +65,7 @@ terraform destroy --auto-approve
 aws cloud9 create-environment-membership --environment-id 1234567890987654321 --user-arn arn:aws:iam::123456789098:root --permissions read-write
 ```
 
-#### EKS Admin IAM entities Setup
+#### Setup - EKS Admin IAM entities
 1. `kubectl edit cm/aws-auth -n kube-system`
 2. Reference the aws-auth configuration map below:
 ```
@@ -104,8 +104,11 @@ metadata:
 ```
 
 #### EKS RBAC Setup
+
 Prerequisite: `Create an IAM Role for this purpose`
+
 Notes: `This Cloudformation deployment for EKS cluster also creates an EC2 Instance profile, see the Resources tab of CloudFormation`
+
 1. `cd rbac`
 2. `/bin/sh create-rolebindings.sh NAMESPACE EKSCLUSTER NAMESPACE_ROLE_ARN`
 
