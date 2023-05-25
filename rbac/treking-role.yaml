@@ -1,8 +1,8 @@
 kind: Role
 apiVersion: rbac.authorization.k8s.io/v1
 metadata:
-  name: k8s-test-role
-  namespace: test
+  name: k8s-treking-role
+  namespace: treking
 rules:
   - apiGroups:
       - ""
