@@ -65,11 +65,15 @@ terraform destroy --auto-approve
 aws cloud9 create-environment-membership --environment-id 1234567890987654321 --user-arn arn:aws:iam::123456789098:root --permissions read-write
 ```
 
+#### EKS RBAC Setup
+1. Coming Soon
+
 #### References:
 1. https://docs.aws.amazon.com/eks/latest/userguide/service_IAM_role.html#create-service-role
 1. https://docs.aws.amazon.com/prescriptive-guidance/latest/patterns/deploy-an-amazon-eks[…]-cluster-from-aws-cloud9-using-an-ec2-instance-profile.html
 1. https://docs.aws.amazon.com/eks/latest/userguide/install-kubectl.html
 1. https://docs.aws.amazon.com/cloud9/latest/user-guide/share-environment.html#share-environment-admin-user
+1. https://repost.aws/knowledge-center/eks-iam-permissions-namespaces
 
 #### Credits
 
