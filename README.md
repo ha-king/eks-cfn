@@ -66,7 +66,9 @@ aws cloud9 create-environment-membership --environment-id 1234567890987654321 --
 ```
 
 #### Setup - EKS Admin IAM entities
-1. `kubectl edit cm/aws-auth -n kube-system`
+1. `cd ../cloud9`
+2. `/bin/sh install_eksctl.sh`
+2. `kubectl edit cm/aws-auth -n kube-system`
 2. Reference the aws-auth configuration map below:
 ```
 # Please edit the object below. Lines beginning with a '#' will be ignored,
