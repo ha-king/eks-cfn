@@ -66,8 +66,6 @@ aws cloud9 create-environment-membership --environment-id 1234567890987654321 --
 ```
 
 #### Setup - EKS Admin IAM entities
-1. `cd ../cloud9`
-2. `/bin/sh install_eksctl.sh`
 2. `kubectl edit cm/aws-auth -n kube-system`
 2. Reference the aws-auth configuration map below:
 ```
@@ -111,7 +109,9 @@ Prerequisite: `Create an IAM Role for this purpose`
 
 Notes: `This Cloudformation deployment for EKS cluster also creates an EC2 Instance profile, see the Resources tab of CloudFormation`
 
-1. `cd rbac`
+1. `cd ../cloud9`
+2. `/bin/sh install_eksctl.sh`
+1. `cd ../rbac`
 2. `/bin/sh create-rolebindings.sh NAMESPACE EKSCLUSTER NAMESPACE_ROLE_ARN`
 
 #### EKS RBAC Cleanup
