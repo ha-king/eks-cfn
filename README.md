@@ -88,7 +88,7 @@ data:
     - groups:
       - system:masters
       rolearn: arn:aws:iam::123456789098:role/my-role-name
-      username: cre-admin
+      username: my-admin
   mapUsers: |
     - groups:
       - system:masters

@@ -1,4 +1,4 @@
-## AWS Cloud9 - EKS Management via RBAC
+## EKS Management via RBAC
 
 #### Setup - EKS Admin IAM entities
 2. `kubectl edit cm/aws-auth -n kube-system`
