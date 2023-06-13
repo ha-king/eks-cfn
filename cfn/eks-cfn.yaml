@@ -1,0 +1,249 @@
+#
+# Author: Tre King
+# Github: ha-king
+#
+AWSTemplateFormatVersion: "2010-09-09"
+Description: Amazon EKS - Cluster
+
+Parameters:
+  VpcId:
+    Description: 'Target VPC identifier for the EKS deployment'
+    Type: String
+    Default: ''
+  ClusterName:
+    Type: String
+    Description: Name of the EKS cluster
+    Default: 'EKS-DEV'
+  EksVersion:
+    Type: String
+    Description: Version of the EKS cluster
+    Default: '1.27'
+  InstanceType:
+    Type: String
+    Description: Type of the EC2 for node workders
+    Default: 't3.medium'
+  WorkerSubnetA:
+    Type: String
+    Description: Name of subnet A for EKS workers
+    Default: ''
+  WorkerSubnetB:
+    Type: String
+    Description: Name of subnet B for EKS workers
+    Default: ''
+  Path:
+    Type: String
+    Description: Path for the IAM resources
+    Default: ''
+  BoundaryPolicyName:
+    Description: 'This is the name of the developer permission boundary policy.'
+    Type: String
+    Default: ''
+
+Resources:
+          
+  EksClusterRole:
+    Type: "AWS::IAM::Role"
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          -
+            Effect: "Allow"
+            Principal:
+              Service:
+                - "eks.amazonaws.com"
+            Action:
+              - "sts:AssumeRole"
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/AmazonEKSClusterPolicy
+ 
+  EksNodeWorkerRole:
+    Type: "AWS::IAM::Role"
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          -
+            Effect: "Allow"
+            Principal:
+              Service:
+                - "ec2.amazonaws.com"
+            Action:
+              - "sts:AssumeRole"
+      #Path: !Ref Path
+      #PermissionsBoundary: !Sub "arn:aws:iam::${AWS::AccountId}:policy/cms-cloud-admin/${BoundaryPolicyName}"
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy
+        - arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy
+        - arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly
+        - arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore
+      Policies:
+        -
+          PolicyName: "policy-for-eks-rbac"
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              -
+                Effect: "Allow"
+                Action:
+                  - "eks:ListClusters"
+                  - "eks:DescribeClusters"
+                Resource:
+                  - "*"
+
+  NodeInstanceProfile:
+    Type: "AWS::IAM::InstanceProfile"
+    Properties:
+      Path: !Ref Path
+      Roles:
+        - Ref: EksNodeWorkerRole
+ 
+  EksRbacAdminRole:
+    Type: "AWS::IAM::Role"
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          -
+            Effect: "Allow"
+            Principal:
+              Service:
+                - "ec2.amazonaws.com"
+            Action:
+              - "sts:AssumeRole"
+      Path: !Ref Path
+      PermissionsBoundary: !Sub "arn:aws:iam::${AWS::AccountId}:policy/cms-cloud-admin/${BoundaryPolicyName}"
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy
+        - arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy
+        - arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly
+        - arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore
+      Policies:
+        -
+          PolicyName: "policy-for-eks-rbac"
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              -
+                Effect: "Allow"
+                Action:
+                  - "eks:*"
+                Resource:
+                  - "*"
+
+  EksRbacInstanceProfile:
+    Type: "AWS::IAM::InstanceProfile"
+    Properties:
+      Path: !Ref Path
+      Roles:
+        - Ref: EksRbacAdminRole
+ 
+  EKSFargatePodExecutionRole:
+    Type: "AWS::IAM::Role"
+    Properties:
+      AssumeRolePolicyDocument: !Sub |
+        {
+          "Version": "2012-10-17",
+          "Statement": [
+            {
+              "Effect": "Allow",
+              "Condition": {
+                "ArnLike": {
+                  "aws:SourceArn": "arn:aws:eks:${AWS::Region}:${AWS::AccountId}:fargateprofile/${ClusterName}/*"
+                }
+              },
+              "Principal": {
+                "Service": "eks-fargate-pods.amazonaws.com"
+              },
+              "Action": "sts:AssumeRole"
+            }
+          ]
+        }
+      Path: !Ref Path
+      PermissionsBoundary: !Sub "arn:aws:iam::${AWS::AccountId}:policy/cms-cloud-admin/${BoundaryPolicyName}"
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy
+        - arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy
+        - arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly
+      Policies:
+        -
+          PolicyName: "eks-fargate-pod-execution"
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              -
+                Effect: "Allow"
+                Action:
+                  - "eks:*"
+                Resource:
+                  - "*"
+          
+  ClusterSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupName: "eks-cluster-sg"
+      GroupDescription: "Security group that allows EKS node workers to access EKS control plane"
+      VpcId:
+        Ref: VpcId
+        
+  ClusterIngressRule:
+    Type: AWS::EC2::SecurityGroupIngress
+    DependsOn: ClusterSecurityGroup
+    Properties:
+      GroupId:
+        Ref: ClusterSecurityGroup
+      IpProtocol: -1
+      FromPort: '0'
+      ToPort: '65535'
+      SourceSecurityGroupId:
+        Ref: ClusterSecurityGroup
+        
+  EKSCluster:
+    Type: 'AWS::EKS::Cluster'
+    DependsOn: "EKSFargatePodExecutionRole"
+    Properties:
+      Name: !Ref ClusterName
+      Version: !Ref EksVersion
+      RoleArn: !GetAtt ["EksClusterRole", "Arn"]
+      ResourcesVpcConfig:
+        SecurityGroupIds:
+        - !Ref ClusterSecurityGroup
+        SubnetIds:
+        - !Ref WorkerSubnetA
+        - !Ref WorkerSubnetB
+
+  EKSNodegroup:
+    Type: 'AWS::EKS::Nodegroup'
+    DependsOn: "EKSCluster"
+    Properties:
+      AmiType: AL2_x86_64
+      ClusterName: !Ref ClusterName
+      DiskSize: 20
+      ForceUpdateEnabled: true
+      InstanceTypes:
+        - !Ref InstanceType
+      NodegroupName: !Sub "${AWS::StackName}-nodegroup"
+      NodeRole: !GetAtt ["EksNodeWorkerRole", "Arn"]
+      ScalingConfig:
+        MinSize: 1
+        DesiredSize: 1
+        MaxSize: 4
+      Subnets:
+        - !Ref WorkerSubnetA
+        - !Ref WorkerSubnetB
+        
+  EKSFargateProfile:
+    Type: 'AWS::EKS::FargateProfile'
+    DependsOn: "EKSCluster"
+    Properties:
+      FargateProfileName: !Sub "fargate-${ClusterName}"
+      ClusterName: !Ref ClusterName
+      PodExecutionRoleArn: !GetAtt EKSFargatePodExecutionRole.Arn
+      Subnets:
+        - !Ref WorkerSubnetA
+        - !Ref WorkerSubnetB
+      Selectors:
+        - Namespace: '*'
+          Labels:
+            - Key: '*'
+              Value: '*'
